@@ -1,4 +1,5 @@
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # Permet de créer des graphiques visuels
+import re # Permet d'utiliser des regex
 
 # Prends en argument le nom du fichier de la base de donnée (extension comprise) ET une liste de séparateurs de mot
 # Charge la base de donnée, sépare les mots de passe selon les séparateurs données puis retourne une liste contenant tous les mots de passe
@@ -44,42 +45,83 @@ def nbOccurenceOfSpecificCharacterByWordLength(listOfWords, character):
 				listToReturn[len(word)] += 1
 	return listToReturn
 
+# Prends en argument la liste des mots
+# Retourne le mot le plus long
 def getBiggestWordLength(listOfWords):
 	biggestLength = 0
 	for word in listOfWords:
 		if (len(word) > biggestLength):
 			biggestLength = len(word)
-			print(word)
 	return biggestLength
 
-	
-## TEST ##
-#data = UploadDataBase("hak_2352.txt",[" ","\n", "\\", "{", "}"])
-data = UploadDataBase("Ashley-Madison.txt",["\n"])
-#print(getMeanOfWordLength(data))
-print(nbOccurenceOfSpecificCharacterByWordLength(data,"n"))
-"""
-print("data 0 : ",data[0])
-print("data 1 : ",data[1])
-print("data 2 : ",data[2])
-print("data 3 : ",data[3])
-print("data 4 : ",data[4])
-print("data 5 : ",data[5])
-print("data 6 : ",data[6])
-print("data 7 : ",data[7])
-print("data 8 : ",data[8])
-print("data 9 : ",data[9])
-print("data 10 : ",data[10])
-print("data 11 : ",data[11])
-print("data 12 : ",data[12])
-print("data 13 : ",data[13])
-print("data 14 : ",data[14])
-print("data 15 : ",data[15])
-print("data 16 : ",data[16])
-print("data 17 : ",data[17])
-print("data 18 : ",data[18])
-print("data 19 : ",data[19])
-print("data 20 : ",data[20])
-"""
+# Retourne le nombre de mots dans la liste qui ne contiennent que des lettres (a-z)
+def getNbWordCorrespondingToRegex(listOfWords, Regex):
+	counter = 0
+	for word in listOfWords:
+		allMatchingCharacters = ""
+		for character in  re.findall(Regex,word):
+			allMatchingCharacters += character
+		if (word == allMatchingCharacters):
+			counter += 1
+	return counter
 
+# Retourne le nombre de mot redondant dans la liste de mot
+def getNbSameWords(listOfWords):
+	counter = 0
+	for word1 in listOfWords:
+		for word2 in listOfWords:
+			if (word1 == word2):
+				counter += 1
+	counter -= len(listOfWords)
+	return counter
+
+#Prends en arguement la liste des donnée, le label X et le label Y pour afficher un graphique 
+def showData(dataForPlot, xLabel, yLabel):
+	plt.plot(dataForPlot)
+	plt.xlabel(xLabel)
+	plt.ylabel(yLabel)
+	plt.show()
+	
+### TEST ###
+
+## Corpus Hak
+
+# Chargement des données
+dataHak = UploadDataBase("hak_2352.txt",[" ","\n", "\\", "{", "}"])
+
+# Obtenir la moyenne de la longueur des mots
+print("La moyenne des mots du corpus Hak est : ", getMeanOfWordLength(dataHak))
+
+# Obtenir le nombre d'occurence d'un caractère selon la taille des mots puis l'afficher sur un graph
+dataForPlot = nbOccurenceOfSpecificCharacterByWordLength(dataHak,"n")
+showData(dataForPlot, "longueur du mot", "nombre d'occurence")
+
+# Obtenir le nombre de mots dans le corpus qui respecte le regex assigné (adns l'ordre lettre, chiffre)
+print("Le nombre de mots qui ne contienne que des lettres : ", getNbWordCorrespondingToRegex(dataHak, "[a-zA-Z]"))
+print("Le nombre de mots qui ne contienne que des chiffres : ", getNbWordCorrespondingToRegex(dataHak, "[0-9_]"))
+print("Le nombre de mots qui ne contienne que des caractères spéciaux : ", getNbWordCorrespondingToRegex(dataHak, "[^A-Za-z0-9]"))
+
+# Obtenir le nombre de mots redondant dans la liste
+print("Le nombre de mot redondant : ", getNbSameWords(dataHak))
+
+
+## Corpus Ashley
+
+# Chargement des données
+dataAshley = UploadDataBase("Ashley-Madison.txt",["\n"])
+
+# Obtenir la moyenne de la longueur des mots
+print("La moyenne des mots du corpus Ashley est : ", getMeanOfWordLength(dataAshley))
+
+# Obtenir le nombre d'occurence d'un caractère selon la taille des mots puis l'afficher sur un graph
+dataForPlot = nbOccurenceOfSpecificCharacterByWordLength(dataAshley,"n")
+showData(dataForPlot, "longueur du mot", "nombre d'occurence")
+
+# Obtenir le nombre de mots dans le corpus qui respecte le regex assigné (adns l'ordre lettre, chiffre)
+print("Le nombre de mots qui ne contienne que des lettres : ", getNbWordCorrespondingToRegex(dataAshley, "[a-zA-Z]"))
+print("Le nombre de mots qui ne contienne que des chiffres : ", getNbWordCorrespondingToRegex(dataAshley, "[0-9_]"))
+print("Le nombre de mots qui ne contienne que des caractères spéciaux : ", getNbWordCorrespondingToRegex(dataHak, "[^A-Za-z0-9]"))
+
+# Obtenir le nombre de mots redondant dans la liste
+#print("Le nombre de mot redondant : ", getNbSameWords(dataAshley))
 
