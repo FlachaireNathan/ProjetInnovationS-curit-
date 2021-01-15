@@ -82,28 +82,98 @@ def showData(dataForPlot, xLabel, yLabel):
 	plt.ylabel(yLabel)
 	plt.show()
 	
+
+
+
+
 ### TEST ###
 
 ## Corpus Hak
 
 # Chargement des données
-dataHak = UploadDataBase("hak_2352.txt",[" ","\n", "\\", "{", "}"])
+dataTrain = UploadDataBase("text-generation/data/test.txt",[" ","\n", "\\", "{", "}"])
 
 # Obtenir la moyenne de la longueur des mots
-print("La moyenne des mots du corpus Hak est : ", getMeanOfWordLength(dataHak))
+print("La moyenne des mots du corpus Hak est : ", getMeanOfWordLength(dataTrain))
 
 # Obtenir le nombre d'occurence d'un caractère selon la taille des mots puis l'afficher sur un graph
-dataForPlot = nbOccurenceOfSpecificCharacterByWordLength(dataHak,"n")
+dataForPlot = nbOccurenceOfSpecificCharacterByWordLength(dataTrain,"n")
 showData(dataForPlot, "longueur du mot", "nombre d'occurence")
 
+nbPasswords = len(dataTrain)
+print("Le nombre total de mot de passe : ", nbPasswords)
+
 # Obtenir le nombre de mots dans le corpus qui respecte le regex assigné (adns l'ordre lettre, chiffre)
-print("Le nombre de mots qui ne contienne que des lettres : ", getNbWordCorrespondingToRegex(dataHak, "[a-zA-Z]"))
-print("Le nombre de mots qui ne contienne que des chiffres : ", getNbWordCorrespondingToRegex(dataHak, "[0-9_]"))
-print("Le nombre de mots qui ne contienne que des caractères spéciaux : ", getNbWordCorrespondingToRegex(dataHak, "[^A-Za-z0-9]"))
+
+# 1 #
+
+OnlyLettersUpperCase = getNbWordCorrespondingToRegex(dataTrain, "[A-Z]")
+print("Le nombre de mots qui ne contienne que des lettres uppercases : ", OnlyLettersUpperCase)
+
+OnlyLettersLowerCase = getNbWordCorrespondingToRegex(dataTrain, "[a-z]")
+print("Le nombre de mots qui ne contienne que des lettres lowercase : ", OnlyLettersLowerCase)
+
+OnlyNumbers = getNbWordCorrespondingToRegex(dataTrain, "[0-9]")
+print("Le nombre de mots qui ne contienne que des chiffres : ", OnlyNumbers)
+
+OnlySpecials = getNbWordCorrespondingToRegex(dataTrain, "[^A-Za-z0-9]")
+print("Le nombre de mots qui ne contienne que des caractères spéciaux : ", OnlySpecials)
+
+Others = nbPasswords - OnlyLettersUpperCase - OnlyLettersLowerCase - OnlyNumbers - OnlySpecials
+print("Les autres mot de passes : ", Others)
+
+"""
+# 2 #
+
+OnlyLetters = getNbWordCorrespondingToRegex(dataTrain, "[a-zA-Z]") - OnlyLettersUpperCase - OnlyLettersLowerCase
+print("Le nombre de mots qui ne contienne que des lettres : ", OnlyLetters)
+
+OnlyLettersUpperCaseAndNumbers = getNbWordCorrespondingToRegex(dataTrain, "[A-Z0-9]") - OnlyLettersUpperCase - OnlyNumbers
+print("Le nombre de mots qui ne contienne que des lettres uppercase et nombres : ", OnlyLettersUpperCaseAndNumbers)
+
+OnlyLettersUpperCaseAndSpecials = getNbWordCorrespondingToRegex(dataTrain, "[^a-z0-9]") - OnlyLettersUpperCase - OnlySpecials
+print("Le nombre de mots qui ne contienne que des lettres uppercase et caractères spéciaux : ", OnlyLettersUpperCaseAndNumbers)
+
+OnlyLettersLowerCaseAndNumbers = getNbWordCorrespondingToRegex(dataTrain, "[a-z0-9]") - OnlyLettersLowerCase - OnlyNumbers
+print("Le nombre de mots qui ne contienne que des lettres uppercase et caractères spéciaux : ", OnlyLettersLowerCaseAndNumbers)
+
+OnlyLettersLowerCaseAndSpecials = getNbWordCorrespondingToRegex(dataTrain, "[^a-z0-9]") - OnlyLettersLowerCase - OnlySpecials
+print("Le nombre de mots qui ne contienne que des lettres lowercase et caractères spéciaux : ", OnlyLettersLowerCaseAndSpecials)
+
+OnlyNumbersAndSpecials = getNbWordCorrespondingToRegex(dataTrain, "[^a-z0-9]") - OnlyNumbers - OnlySpecials
+print("Le nombre de mots qui ne contienne que des nombres et caractères spéciaux : ", OnlyNumbersAndSpecials)
+
+
+# 3 #
+
+OnlyLettersAndNumbers = getNbWordCorrespondingToRegex(dataTrain, "[a-zA-Z0-9]]") - OnlyLettersUpperCase - Only OnlyLetters - OnlyNumbers
+print("Le nombre de mots qui ne contienne que des lettres et nombres : ", OnlyLettersAndNumbers)
+
+OnlyLettersAndSpecials = getNbWordCorrespondingToRegex(dataTrain, "[^0-9]]") - OnlyLetters - OnlySpecials
+print("Le nombre de mots qui ne contienne que des lettres et caractère spéciaux : ", OnlyLettersAndSpecials)
+
+OnlyLettersUpperCaseAndNumbersAndSpecials = getNbWordCorrespondingToRegex(dataTrain, "[^a-z]") - OnlyLettersUpperCase - OnlyNumbers - OnlySpecials
+print("Le nombre de mots qui ne contienne que des lettres uppercase, nombres et caractère spéciaux : ", OnlyLettersUpperCaseAndNumbersAndSpecials)
+
+OnlyLettersLowerCaseAndNumbersAndSpecials = getNbWordCorrespondingToRegex(dataTrain, "[^a-z]") - OnlyLettersLowerCaseAndNumbers - OnlyNumbers - OnlySpecials
+print("Le nombre de mots qui ne contienne que des lettres lowercase, nombres et caractère spéciaux : ", OnlyLettersLowerCaseAndNumbersAndSpecials)
+
+
+# 4 #
+OnlyLettersAndNumbersAndSpecials = nbPasswords - OnlyLetters - OnlyNumbers - OnlySpecials
+print("Le nombre de mots qui contiennent tout type de caractères : ", OnlyNumbersAndSpecials)
+
+
+OnlyNumbersOrSpecials = getNbWordCorrespondingToRegex(dataTrain, "[^a-zA-Z]") - OnlyNumbers - OnlySpecials
+
+print("Le nombre de mots qui contient des lettres, nombres et caractères, spéciaux : ", getNbWordCorrespondingToRegex(dataTrain, "[^0-9]]"))
 
 # Obtenir le nombre de mots redondant dans la liste
-print("Le nombre de mot redondant : ", getNbSameWords(dataHak))
+print("Le nombre de mot redondant : ", getNbSameWords(dataTrain))
 
+"""
+
+"""
 
 ## Corpus Ashley
 
@@ -120,8 +190,9 @@ showData(dataForPlot, "longueur du mot", "nombre d'occurence")
 # Obtenir le nombre de mots dans le corpus qui respecte le regex assigné (adns l'ordre lettre, chiffre)
 print("Le nombre de mots qui ne contienne que des lettres : ", getNbWordCorrespondingToRegex(dataAshley, "[a-zA-Z]"))
 print("Le nombre de mots qui ne contienne que des chiffres : ", getNbWordCorrespondingToRegex(dataAshley, "[0-9_]"))
-print("Le nombre de mots qui ne contienne que des caractères spéciaux : ", getNbWordCorrespondingToRegex(dataHak, "[^A-Za-z0-9]"))
+print("Le nombre de mots qui ne contienne que des caractères spéciaux : ", getNbWordCorrespondingToRegex(dataTrain, "[^A-Za-z0-9]"))
 
 # Obtenir le nombre de mots redondant dans la liste
 #print("Le nombre de mot redondant : ", getNbSameWords(dataAshley))
 
+"""
