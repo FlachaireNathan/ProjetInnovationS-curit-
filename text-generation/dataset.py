@@ -47,9 +47,10 @@ class Dataset(torch.utils.data.Dataset):
 			passwords.append(line)
 		random.shuffle(passwords)
 		
-		for i in range(4000):
+		for i in range(10000):
 			for j in range(len(passwords[i])):
-						passwordsToReturn.append(passwords[i][j])
+				if (passwords[i][j] != "\n"):
+					passwordsToReturn.append(passwords[i][j])
 		return passwordsToReturn
 
 	def get_uniq_words(self):

@@ -46,28 +46,6 @@ def predict(dataset, model, text, next_letters):
 		last_word_logits = y_pred[0][-1]
 		p = torch.nn.functional.softmax(last_word_logits, dim=0).detach().numpy()
 		word_index = np.random.choice(len(last_word_logits), p=p)
-		"""
-		print(i)
-		print("-------------------")
-		print(x)
-		print("-------------------")
-		print(words)
-		print("-------------------")
-		print(word_index)
-		print("-------------------")
-		print(dataset.index_to_word)
-		print("-------------------")
-		print(p)
-		print("-------------------")
-		print(last_word_logits)
-		print("-------------------")
-		print(len(last_word_logits))
-		print("-------------------")
-		print(len(dataset.words))
-		print("-------------------")
-		print(len(dataset.index_to_word))
-		print("-------------------")
-		"""
 		words.append(dataset.words[word_index])
 
 	return words
@@ -82,7 +60,7 @@ def predicts(dataset, model, words):
 			for c2 in dataset.word_to_index:
 				if (c1 == c2):
 					found = True
-				if (c1 == "*" or c1 == "," or c1 == "#" or c1 == "-" or c1 == "&" or c1 == "(" or c1 == "["):
+				if (c1 == "*" or c1 == "," or c1 == "#" or c1 == "-" or c1 == "&" or c1 == "(" or c1 == "[" or c1=="=" or c1=="?"):
 					skip = True
 
 		if found == False:
@@ -90,7 +68,7 @@ def predicts(dataset, model, words):
 
 		if (skip == False):
 			temp = predict(dataset, model, word[0: 3], len(word)-3)
-			print(word, " => ", temp)
+			#print(word, " => ", temp)
 			word_predicted = ""
 			for letter in temp:
 				word_predicted += letter
@@ -106,7 +84,7 @@ def precision(dataset, words_predicted):
 			if (word == word_predicted):
 				nb_good_predictions += 1
 				break
-	return nb_good_predictions/len(words)
+	return nb_good_predictions/len(words_predicted)
 
 
 parser = argparse.ArgumentParser()
@@ -129,7 +107,6 @@ model = Model(dataset).to(device)
 train(dataset, model, args)
 torch.save(model, "model_train")
 """
-
 # Model class must be defined somewhere
 
 model = torch.load("model")
@@ -143,10 +120,23 @@ for line in f: # Pour chaque ligne du fichier
 
 words_predicted = predicts(dataset, model, test_words)
 
+"""
 print(words)
 print(words_predicted)
 print(len(words))
 print(len(words_predicted))
-for i in range(len(words)):
-	print(words[i], " => ", words_predicted[i])
-print("Precision : ", precision(dataset, words_predicted),"%")
+"""
+
+f = open("output.txt", "a")
+for i in range(len(test_words)):
+	s = ""
+	for c in test_words[i]:
+		s += c
+	s += " => "
+	for c in words_predicted[i]:
+		s += c
+	s += "\n"
+	f.write(s)
+print("Precision : " , precision(dataset, words_predicted) , "%")
+f.write("Precision : " + string(precision(dataset, words_predicted)) + "%")
+f.close()
