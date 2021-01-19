@@ -17,37 +17,21 @@ class Dataset(torch.utils.data.Dataset):
 			self.word_to_index = {word: index for index, word in enumerate(self.uniq_words)}
 
 			self.words_indexes = [self.word_to_index[w] for w in self.words]
-			
-
-			#print("self.args")
-			#print(self.args)
-
-			#print("self.words")
-			#print(self.words)
-
-			#print("self.uniq_words")
-			#print(self.uniq_words)
-
-			#print("self.index_to_word")
-			#print(self.index_to_word)
-
-			#print("self.word_to_index")
-			#print(self.word_to_index)
-
-			#print("self.words_indexes")
-			#print(self.words_indexes)
 
 
 	def load_words(self, nameFile, separator):
+
+		nbWords = 10000
+
 		passwords = []
 		passwordsToReturn = []
-		f = open(nameFile, "r") # Charle le fichier dans une variable
-		counter = 0
-		for line in f: # Pour chaque ligne du fichier
+		f = open(nameFile, "r")
+		for line in f: 
 			passwords.append(line)
 		random.shuffle(passwords)
 		
-		for i in range(10000):
+		# Select x number of password from the coprus randomly
+		for i in range(nbWords):
 			for j in range(len(passwords[i])):
 				if (passwords[i][j] != "\n"):
 					passwordsToReturn.append(passwords[i][j])

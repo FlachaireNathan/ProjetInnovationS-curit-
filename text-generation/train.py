@@ -102,6 +102,7 @@ if torch.cuda.is_available():
 else:
 	device = torch.device("cuda:0")
 
+# Train model from scratch
 """
 model = Model(dataset).to(device)
 train(dataset, model, args)
@@ -109,23 +110,18 @@ torch.save(model, "model_train")
 """
 # Model class must be defined somewhere
 
+#Load it from saved model file
 model = torch.load("model")
 model.eval()
 
 
-f = open("data/test.txt", "r") # Charle le fichier dans une variable
+# Load test corpus in file and test preditions of the model
+f = open("data/test.txt", "r")
 test_words = []
-for line in f: # Pour chaque ligne du fichier
+for line in f:
 	test_words.append(line)
 
 words_predicted = predicts(dataset, model, test_words)
-
-"""
-print(words)
-print(words_predicted)
-print(len(words))
-print(len(words_predicted))
-"""
 
 f = open("output.txt", "a")
 for i in range(len(test_words)):
